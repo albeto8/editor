@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@skidding/react-codemirror": "^1.0.2",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
+    "react-markdown": "^4.0.6",
     "react-scripts": "2.1.5",
     "react-split-pane": "^0.1.85"
   },
