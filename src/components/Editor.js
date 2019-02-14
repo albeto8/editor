@@ -17,7 +17,6 @@ class Editor extends Component {
     var options = {
       mode: 'markdown',
       theme: 'monokai',
-      lineNumbers: true,
     }
     return (
       <CodeMirror
