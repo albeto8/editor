@@ -4,7 +4,10 @@
   "private": true,
   "dependencies": {
     "@skidding/react-codemirror": "^1.0.2",
+    "apollo-boost": "^0.1.28",
+    "graphql": "^14.1.1",
     "react": "^16.8.1",
+    "react-apollo": "^2.4.1",
     "react-dom": "^16.8.1",
     "react-markdown": "^4.0.6",
     "react-scripts": "2.1.5",
