@@ -26,3 +26,12 @@ mutation addDocument($contentData: String!) {
   }
 }
 `
+
+export const UPDATE_DOCUMENT = gql`
+mutation changeDocumentContent($id: Int! $contentData: String!) {
+  changeDocumentContent(id: $id contentData: $contentData) {
+    id
+    contentData
+  }
+}
+`

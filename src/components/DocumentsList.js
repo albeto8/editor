@@ -3,7 +3,7 @@ import { Query, Mutation } from 'react-apollo';
 import {
   REMOVE_DOCUMENT,
   GET_DOCUMENTS,
-  ADD_DOCUMENT
+  ADD_DOCUMENT,
 } from '../queries';
 const containerStyle = {
   display: 'flex',
@@ -44,7 +44,7 @@ class DocumentsList extends React.Component {
 
           return data.documents.map((item) => (
             <div key={item.id} style={containerStyle}>
-              <p>Document {item.id}: {item.contentData}</p>
+              <p>Document {item.id}</p>
               <button onClick={() => onItemPress(item)}>Select item</button>
               <Mutation mutation={REMOVE_DOCUMENT}
                 variables={{ id: item.id }}
