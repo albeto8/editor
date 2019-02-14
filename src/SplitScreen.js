@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Mutation } from 'react-apollo';
+import Button from '@material-ui/core/Button';
 import {
   UPDATE_DOCUMENT
 } from './queries';
@@ -15,7 +16,16 @@ const containerStyle = {
 }
 
 const itemStyle = {
+  flex: 2,
+}
+
+const docListContainer = {
   flex: 1,
+  margin: 10
+}
+
+const codeContainer = {
+  width: '500px'
 }
 
 class SplitScreen extends Component {
@@ -45,11 +55,15 @@ class SplitScreen extends Component {
         <Mutation mutation={UPDATE_DOCUMENT}
           variables={{ contentData: markdownSrc, id: selectedDocument.id }}
         >
-          {(addDocument, { data }) => (
+          {(changeDocument, { data }) => (
             <div>
-                <button onClick={() => addDocument()} type="submit">
+                <Button
+                  onClick={() => changeDocument()}
+                  variant="contained"
+                  color="primary"
+                >
                   Save Changes
-                </button>
+                </Button>
             </div>
           )}
         </Mutation>
@@ -60,12 +74,12 @@ class SplitScreen extends Component {
   render() {
     return (
       <div style={containerStyle}>
-        <div style={itemStyle}>
+        <div style={docListContainer}>
           <DocumentsList onItemPress={(item) => this.onItemPress(item)} />
         </div>
-        {this.renderUpdateButton()}
-        <div style={itemStyle}>
+        <div style={codeContainer}>
           <Editor value={this.state.markdownSrc} onChange={this.onMarkdownChange}/>
+          {this.renderUpdateButton()}
         </div>
         <div style={itemStyle}>
           <ReactMarkdown source={this.state.markdownSrc} />

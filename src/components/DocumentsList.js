@@ -1,13 +1,21 @@
 import React from 'react';
 import { Query, Mutation } from 'react-apollo';
+import Button from '@material-ui/core/Button';
+import InboxIcon from '@material-ui/icons/Inbox';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import {
   REMOVE_DOCUMENT,
   GET_DOCUMENTS,
   ADD_DOCUMENT,
 } from '../queries';
+
 const containerStyle = {
   display: 'flex',
-  flexDirection: 'column'
+  flexDirection: 'row',
+  justifyContent: 'space-between'
 }
 
 const updateCache = (cache, { data: { removeDocument }}) => {
@@ -32,6 +40,27 @@ const updateAddCache = (cache, { data: { addDocument }}) => {
 
 class DocumentsList extends React.Component {
 
+  renderDeleteButton(item) {
+    return (
+      <Mutation mutation={REMOVE_DOCUMENT}
+        variables={{ id: item.id }}
+        update={updateCache}
+      >
+        {(removeDocument, { data }) => (
+          <div>
+              <Button
+                onClick={() => removeDocument()}
+                variant="contained"
+                color="secondary"
+              >
+                Delete
+              </Button>
+          </div>
+        )}
+      </Mutation>
+    )
+  }
+
   renderDocumentsList() {
     const { onItemPress } = this.props
     return (
@@ -44,20 +73,16 @@ class DocumentsList extends React.Component {
 
           return data.documents.map((item) => (
             <div key={item.id} style={containerStyle}>
-              <p>Document {item.id}</p>
-              <button onClick={() => onItemPress(item)}>Select item</button>
-              <Mutation mutation={REMOVE_DOCUMENT}
-                variables={{ id: item.id }}
-                update={updateCache}
+              <ListItem
+                button
+                onClick={() => onItemPress(item)}
               >
-                {(removeDocument, { data }) => (
-                  <div>
-                      <button onClick={() => removeDocument()} type="submit">
-                        Delete document
-                      </button>
-                  </div>
-                )}
-              </Mutation>
+                  <ListItemIcon>
+                    <InboxIcon />
+                  </ListItemIcon>
+                <ListItemText primary={`Document ${item.id}`} />
+              </ListItem>
+              {this.renderDeleteButton(item)}
             </div>
           ));
         }}
@@ -73,9 +98,13 @@ class DocumentsList extends React.Component {
       >
         {(addDocument, { data }) => (
           <div>
-              <button onClick={() => addDocument()} type="submit">
-                Create new document
-              </button>
+            <Button
+              onClick={() => addDocument()}
+              variant="contained"
+              color="primary"
+            >
+              Create Document
+            </Button>
           </div>
         )}
       </Mutation>
@@ -86,7 +115,9 @@ class DocumentsList extends React.Component {
     return (
       <div>
         {this.renderCreateButton()}
-        {this.renderDocumentsList()}
+        <List component="nav">
+          {this.renderDocumentsList()}
+        </List>
       </div>
     )
   }
