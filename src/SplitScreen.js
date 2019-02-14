@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import SplitPane from 'react-split-pane';
 import ReactMarkdown from 'react-markdown';
 import Editor from './components/Editor';
 import DocumentsList from './components/DocumentsList';
@@ -7,20 +6,19 @@ import DocumentsList from './components/DocumentsList';
 const containerStyle = {
   display: 'flex',
   flex: 1,
-  flexDirection: 'column',
-  flexWrap: 'wrap',
+  flexDirection: 'row',
   alignItems: 'flex-start'
 }
 
 const itemStyle = {
-  width: '33vh',
-  backgroundColor: 'red'
+  flex: 1,
 }
 
 class SplitScreen extends Component {
 
   state = {
-    markdownSrc: "# Hello World"
+    markdownSrc: '',
+    selectedDocument: null
   }
 
   componentDidMount() {
@@ -31,11 +29,16 @@ class SplitScreen extends Component {
     this.setState({ markdownSrc: md });
   }
 
+  onItemPress = (item) => {
+    this.setState({ selectedDocument: item, markdownSrc: item.contentData });
+    console.log(item);
+  }
+
   render() {
     return (
-      <div containerStyle={containerStyle}>
-        <div>
-          <DocumentsList />
+      <div style={containerStyle}>
+        <div style={itemStyle}>
+          <DocumentsList onItemPress={(item) => this.onItemPress(item)} />
         </div>
         <div style={itemStyle}>
           <Editor value={this.state.markdownSrc} onChange={this.onMarkdownChange}/>

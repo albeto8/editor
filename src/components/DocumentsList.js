@@ -7,7 +7,7 @@ const containerStyle = {
   flexDirection: 'column'
 }
 
-const DocumentsList = () => (
+const DocumentsList = ({ onItemPress }) => (
   <Query
     query={gql`
       {
@@ -22,9 +22,10 @@ const DocumentsList = () => (
       if (loading) return <p>Loading...</p>;
       if (error) return <p>Error :(</p>;
 
-      return data.documents.map(({ contentData, id }) => (
-        <div key={id} style={containerStyle}>
-          <p>Document {id}: {contentData}</p>
+      return data.documents.map((item) => (
+        <div key={item.id} style={containerStyle}>
+          <p>Document {item.id}: {item.contentData}</p>
+          <button onClick={() => onItemPress(item)}>Select item</button>
         </div>
       ));
     }}
