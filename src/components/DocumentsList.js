@@ -1,33 +1,17 @@
 import React from 'react';
 import { Query, Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
-
+import {
+  REMOVE_DOCUMENT,
+  GET_DOCUMENTS,
+  ADD_DOCUMENT
+} from '../queries';
 const containerStyle = {
   display: 'flex',
   flexDirection: 'column'
 }
 
-const REMOVE_DOCUMENT = gql`
-  mutation removeDocument($id: Int!) {
-    removeDocument(id: $id) {
-      id
-      contentData
-    }
-  }
-`;
-
-const GET_DOCUMENTS = gql`
-  {
-    documents {
-      id
-      contentData
-    }
-  }
-`
-
 const updateCache = (cache, { data: { removeDocument }}) => {
   const { documents } = cache.readQuery({ query: GET_DOCUMENTS });
-  console.log(documents);
     cache.writeQuery({
       query: GET_DOCUMENTS,
       data: {
@@ -36,9 +20,19 @@ const updateCache = (cache, { data: { removeDocument }}) => {
     })
 }
 
+const updateAddCache = (cache, { data: { addDocument }}) => {
+  const { documents } = cache.readQuery({ query: GET_DOCUMENTS });
+    cache.writeQuery({
+      query: GET_DOCUMENTS,
+      data: {
+        documents: documents.concat(addDocument)
+      }
+    })
+}
+
 class DocumentsList extends React.Component {
 
-  render() {
+  renderDocumentsList() {
     const { onItemPress } = this.props
     return (
       <Query
@@ -68,6 +62,32 @@ class DocumentsList extends React.Component {
           ));
         }}
       </Query>
+    )
+  }
+
+  renderCreateButton() {
+    return (
+      <Mutation mutation={ADD_DOCUMENT}
+        variables={{ contentData: '# New document' }}
+        update={updateAddCache}
+      >
+        {(addDocument, { data }) => (
+          <div>
+              <button onClick={() => addDocument()} type="submit">
+                Create new document
+              </button>
+          </div>
+        )}
+      </Mutation>
+    )
+  }
+
+  render() {
+    return (
+      <div>
+        {this.renderCreateButton()}
+        {this.renderDocumentsList()}
+      </div>
     )
   }
 }
